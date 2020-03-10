@@ -33,7 +33,7 @@ if __name__ == '__main__':
 
     options = {
         #'bind': '{}:{}'.format(config['API_HOST_NAME'], config['API_PORT']),
-        #'timeout': config['TIMEOUT'],
+        'timeout': 100000000000,
         #'keep-alive': config['KEEP_ALIVE'],
         'workers': number_of_workers(4),
         'worker_class': 'uvicorn.workers.UvicornWorker',
