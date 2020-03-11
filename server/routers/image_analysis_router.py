@@ -1,14 +1,31 @@
+import threading
 from json import dumps
 from typing import List
 from fastapi import APIRouter, UploadFile, File
 from image_analysis.analysis import get_hsv_matriz_formatted
 from server.models.image_models import ImageAnalysisResponse, Color, Emotion, ColorRecommendation
 import pandas as pd
+import numpy as np
 
 from datetime import datetime
 
 
 router = APIRouter()
+
+
+def get_color_count(hsvs, nparray_df_s, nparray_df_e):
+
+    greater = np.greater_equal(hsvs[:, :, :], nparray_df_s)
+
+    less = np.less_equal(hsvs[:, :, :], nparray_df_e)
+
+    land = np.logical_and(less, greater)
+
+    land_2d = land.reshape(-1, 3)
+
+    result = np.apply_over_axes(np.all, land_2d, [1]).flatten()
+
+    return np.sum(result.flatten())
 
 
 @router.post(
@@ -19,6 +36,8 @@ router = APIRouter()
     status_code=200)
 async def analyze_image(file: UploadFile = File(...)):
 
+    start = datetime.now()
+
     with open(file.filename, "wb") as out_file:
         out_file.write(await file.read())
 
@@ -28,29 +47,20 @@ async def analyze_image(file: UploadFile = File(...)):
 
     emotion_dict_count = dict()
 
-    start = datetime.now()
+    for index, row in df.iterrows():
+        nparray_df_s = np.array([row["h_s"], row["s_s"], row["v_s"]])
+        nparray_df_e = np.array([row["h_e"], row["s_e"], row["v_e"]])
 
-    for row in hsvs:
-        for elem in row:
-            h = elem[0]
-            s = elem[1]
-            v = elem[2]
+        count = get_color_count(hsvs, nparray_df_s, nparray_df_e)
 
-            df_h = df[(df['h_s'] <= h) & (df['h_e'] >= h)]
+        if row["emotion"]:
+            if row["emotion"] in emotion_dict_count:
+                emotion_dict_count[row["emotion"]] += count
+            else:
+                emotion_dict_count[row["emotion"]] = count
 
-            df_s = df_h[(df_h['s_s'] <= s) & (df_h['s_e'] >= s)]
-
-            df_v = df_s[(df_s['v_s'] <= v) & (df_s['v_e'] >= v)]
-
-            for index, row in df_v.iterrows():
-                if row["emotion"]:
-                    if row["emotion"] in emotion_dict_count:
-                        emotion_dict_count[row["emotion"]] += 1
-                    else:
-                        emotion_dict_count[row["emotion"]] = 1
-
-    print((datetime.now() - start).total_seconds())
     print(emotion_dict_count)
+    print((datetime.now() - start).total_seconds())
 
     color1 = Color(color='red', hsv_s='0, 100, 100', hsv_e='0, 100, 100', percent=60)
     color2 = Color(color='black', hsv_s='0, 0, 0', hsv_e='0, 0, 49', percent=20)

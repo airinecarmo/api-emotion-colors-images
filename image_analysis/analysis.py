@@ -1,3 +1,6 @@
+import time
+from copy import deepcopy
+from numpy import dot
 import cv2
 import pathlib
 
@@ -11,10 +14,8 @@ def get_hsv_matriz_formatted(image_path):
         img = cv2.imread(image_path)
         hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
 
-        for i in range(0, len(hsv)):
-            for j in range(0, len(hsv[i])):
-                hsv[i][j][0] = int(hsv[i][j][0] * 2)
-                hsv[i][j][1] = int((hsv[i][j][1] * 100) / 255)
-                hsv[i][j][2] = int((hsv[i][j][2] * 100) / 255)
+        hsv[:, :, 0] = dot(hsv[:, :, 0], 2.0)
+        hsv[:, :, 1] = dot(hsv[:, :, 1], 0.39215686274509803)
+        hsv[:, :, 2] = dot(hsv[:, :, 2], 0.39215686274509803)
 
         return hsv
