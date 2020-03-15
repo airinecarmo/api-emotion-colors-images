@@ -6,12 +6,12 @@ class Color(BaseModel):
     color: str
     hsv_s: str
     hsv_e: str
-    percent: int
+    percent: float
 
 
 class Emotion(BaseModel):
     emotion: str
-    percent: int
+    percent: float
     colors: List[Color] = None
 
 
