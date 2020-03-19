@@ -1,51 +1,47 @@
 color	h_s	s_s	v_s	h_e	s_e	v_e	emotion	states
-Red	0	0	0	10	100	100	None	
+Red	0	1	1	10	100	100	None	
 Red	336	0	0	360	100	100	None	
-Dark Red	0	100	0	0	100	50	Fear	
+Dark Red	0	100	0	10	100	50	Fear	
 Dark Red	336	100	0	360	100	50	Fear	
-Light Red	0	20	90	0	50	100	Enjoyment	Compassion
+Light Red	0	1	90	0	50	100	Enjoyment	Compassion
 Light Red	336	20	90	360	50	100	Enjoyment	Compassion
-Satured Red	0	70	70	10	100	100	Anger	
-Satured Red	0	70	70	10	100	100	Fear	Panic, Anxiety
-Satured Red	0	70	70	10	100	100	Disgust	
-Desatured Red	0	20	40	10	60	60	None	
-Desatured Red	336	20	40	360	60	60	None	
-Orange	11	0	0	40	100	100	None	
+Satured Red	0	60	70	10	100	100	Anger	
+Satured Red	0	60	70	10	100	100	Fear	Panic, Anxiety
+Satured Red	0	60	70	10	100	100	Disgust	
+Desatured Red	0	20	40	10	60	70	None	
+Desatured Red	336	20	40	360	60	70	None	
 Dark Orange	11	100	0	40	100	50	Fear	
-Light Orange	11	20	90	40	50	100	None	
-Satured Orange	11	70	70	40	100	100	Enjoyment	
-Desatured Orange	11	20	40	40	60	60	None	
+Light Orange	11	0	90	40	50	100	None	
+Satured Orange	11	60	70	40	100	100	Enjoyment	
+Desatured Orange	11	20	40	40	60	70	None	
 Brown	30	0	0	30	100	60	None	
 Dark Brown	30	100	0	30	100	50	Fear	
-Desatured Brown	30	20	40	30	60	60	None	
-Yellow	41	0	0	70	100	100	None	
+Desatured Brown	30	20	40	30	60	70	None	
 Dark Yellow	41	100	0	70	100	50	Fear	
-Light Yellow	41	20	90	70	50	100	None	
-Satured Yellow	41	70	70	70	100	100	Enjoyment	
-Desatured Yellow	41	20	40	70	60	60	Fear	
-Green	71	0	0	170	100	100	None	
+Light Yellow	41	0	90	70	50	100	None	
+Satured Yellow	41	60	70	70	100	100	Enjoyment	
+Desatured Yellow	41	20	40	70	60	70	Fear	
 Dark Green	71	100	0	170	100	50	Anger	Fury
 Dark Green	71	100	0	170	100	50	Fear	Terror
-Light Green	71	20	90	170	50	100	Enjoyment	
-Satured Green	71	70	70	170	100	100	Disgust	
-Desatured Green	71	20	40	170	60	60	None	
-Blue	171	0	100	260	100	100	None	
+Light Green	71	0	90	170	50	100	Enjoyment	
+Satured Green	71	60	70	170	100	100	Disgust	
+Desatured Green	71	20	40	170	60	70	None	
 Dark Blue	171	100	0	260	100	50	Fear	Horror
-Light Blue	171	20	90	260	50	100	Enjoyment	
-Satured Blue	171	70	70	260	100	100	Enjoyment	
-Desaturated Blue	171	20	40	260	60	60	Sadness	
-Purple	261	0	0	309	100	100	None	
+Light Blue	171	0	90	260	50	100	Enjoyment	
+Satured Blue	171	60	70	260	100	100	Enjoyment	
+Desaturated Blue	171	20	40	260	60	70	Sadness	
 Dark Purple	261	100	0	309	100	50	Fear	
-Light Purple	261	20	90	309	50	100	None	
-Satured Purple	261	70	70	309	100	100	Enjoyment	
-Desatured Purple	261	20	40	309	60	60	None	
-Pink	310	0	0	335	100	100	None	
+Light Purple	261	0	90	309	50	100	None	
+Satured Purple	261	60	70	309	100	100	Enjoyment	
+Desatured Purple	261	20	40	309	60	70	None	
 Dark Pink	310	100	0	335	100	50	Fear	
-Light Pink	310	20	90	335	50	100	Enjoyment	
-Satured Pink	310	70	70	335	100	100	Enjoyment	
-Desatured Pink	310	20	40	335	60	60	None	
-Black	0	0	0	0	0	10	Fear	
-Black	0	0	0	0	0	10	Sadness	
-Grey	0	0	11	0	0	80	Sadness	
-Grey	0	0	11	0	0	80	Fear	
-White	0	0	79	0	0	100	Enjoyment	Peace
+Light Pink	310	0	90	335	50	100	Enjoyment	
+Satured Pink	310	60	70	335	100	100	Enjoyment	
+Desatured Pink	310	20	40	335	60	70	None	
+Black	0	0	0	360	0	10	Fear	
+Black	0	0	0	360	0	10	Sadness	
+Black	0	1	0	360	100	0	Fear	
+Black	0	1	0	360	100	0	Sadness	
+Grey	0	0	11	360	0	80	Sadness	
+Grey	0	0	11	360	0	80	Fear	
+White	0	0	79	360	0	100	Enjoyment	Peace

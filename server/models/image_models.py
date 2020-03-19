@@ -6,7 +6,7 @@ class Color(BaseModel):
     color: str
     hsv_s: str
     hsv_e: str
-    percent: float
+    percent: float = None
 
 
 class Emotion(BaseModel):

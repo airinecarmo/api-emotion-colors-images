@@ -6,6 +6,7 @@ import numpy as np
 
 from datetime import datetime
 
+from utils.http_responses import build_error_response
 
 router = APIRouter()
 
@@ -102,13 +103,42 @@ async def analyze_image(file: UploadFile = File(...)):
     status_code=200)
 async def check_emotion_in_file(emotion: str = None,
                                 file: UploadFile = File(...)):
+    
+    emotion_list = ["Fear", "Enjoyment", "Anger", "Disgust", "Sadness", "None"]
+
+    if emotion not in emotion_list:
+        return build_error_response(status_code=400, content="Emotion is not in emotion list.")
 
     with open(file.filename, "wb") as out_file:
         out_file.write(await file.read())
 
-    hsv = get_hsv_matriz_formatted(file.filename)
+    hsvs = get_hsv_matriz_formatted(file.filename)
 
-    return {"percent": 80}
+    df = pd.read_csv("color_emotion.csv", delimiter="\t")
+
+    emotion_dict_count = dict()
+    x = np.zeros((hsvs.shape[0] * hsvs.shape[1]), dtype=bool)
+
+    for index, row in df.iterrows():
+
+        nparray_df_s = np.array([row["h_s"], row["s_s"], row["v_s"]])
+        nparray_df_e = np.array([row["h_e"], row["s_e"], row["v_e"]])
+
+        count, result = get_color_count(hsvs, nparray_df_s, nparray_df_e)
+        x = np.any((x, result), axis=0)
+
+        if row["emotion"] in emotion_dict_count:
+            emotion_dict_count[row["emotion"]]["count"] += count
+        else:
+            emotion_dict_count[row["emotion"]] = {"count": count}
+
+    zero = (hsvs.shape[0] * hsvs.shape[1]) - np.count_nonzero(x)
+
+    # percent por emotion
+    for key, item in emotion_dict_count.items():
+        if key.upper() == emotion.upper():
+            percent = (item["count"] * 100) / ((hsvs.shape[0] * hsvs.shape[1]) - zero)
+            return {"percent": "%.4f" % percent}
 
 
 @router.get(
@@ -119,8 +149,18 @@ async def check_emotion_in_file(emotion: str = None,
     status_code=200)
 async def recommend_colors(emotion: str = None):
 
-    color1 = ColorRecommendation(color='red', hsv_s='0, 100, 100', hsv_e='0, 100, 100')
-    color2 = ColorRecommendation(color='black', hsv_s='0, 0, 0', hsv_e='0, 0, 49')
-    colors = [color1, color2]
+    emotion_list = ["Fear", "Enjoyment", "Anger", "Disgust", "Sadness", "None"]
 
-    return {"colors": colors}
+    if emotion not in emotion_list:
+        return build_error_response(status_code=400, content="Emotion is not in emotion list.")
+
+    df = pd.read_csv("color_emotion.csv", delimiter="\t")
+
+    color_list = []
+    for index, row in df.iterrows():
+        
+        if str(row["emotion"]).upper() == emotion.upper():
+            color = Color(color=row['color'], hsv_s=str([row["h_s"], row["s_s"], row["v_s"]]), hsv_e=str([row["h_e"], row["s_e"], row["v_e"]]))
+            color_list.append(color)
+
+    return {"colors": color_list}

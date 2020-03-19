@@ -17,12 +17,12 @@ from fastapi.encoders import jsonable_encoder
 
 
 class Origin(Enum):
-    SMART_BANK = 'SMART_BANK'
+    EMOTION_IN_COLORS = 'EMOTION_IN_COLORS'
 
 
 class ErrorResponse(BaseModel):
     code: int = None
-    origin: Enum = Origin.SMART_BANK
+    origin: Enum = Origin.EMOTION_IN_COLORS
     message: str = None
 
 
