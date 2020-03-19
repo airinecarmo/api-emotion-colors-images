@@ -33,6 +33,7 @@ if __name__ == '__main__':
 
     options = {
         #'bind': '{}:{}'.format(config['API_HOST_NAME'], config['API_PORT']),
+        'bind': '0.0.0.0:8080',
         'timeout': 100000000000,
         #'keep-alive': config['KEEP_ALIVE'],
         'workers': number_of_workers(4),
