@@ -1,4 +1,6 @@
-from fastapi import APIRouter, UploadFile, File
+from fastapi import APIRouter, UploadFile, File, Header
+from fastapi.params import Form
+
 from image_analysis.analysis import get_hsv_matriz_formatted
 from server.models.image_models import ImageAnalysisResponse, Color, Emotion, ColorRecommendation
 import pandas as pd
@@ -101,9 +103,9 @@ async def analyze_image(file: UploadFile = File(...)):
     summary="Check emotion in image.",
     description="This resource aim to check emotion in image.",
     status_code=200)
-async def check_emotion_in_file(emotion: str = None,
+async def check_emotion_in_file(*, emotion: str = Header(None),
                                 file: UploadFile = File(...)):
-    
+
     emotion_list = ["Fear", "Enjoyment", "Anger", "Disgust", "Sadness", "None"]
 
     if emotion not in emotion_list:
