@@ -13,6 +13,7 @@ from utils.http_responses import build_error_response
 
 router = APIRouter()
 
+df = pd.read_csv("color_emotion.csv", delimiter="\t")
 
 def get_color_count(hsvs, nparray_df_s, nparray_df_e):
 
@@ -51,8 +52,6 @@ async def analyze_image(file: UploadFile = File(...)):
 
     if os.path.exists(image_folder + file.filename):
         os.remove(image_folder + file.filename)
-
-    df = pd.read_csv("color_emotion.csv", delimiter="\t")
 
     emotion_dict_count = dict()
     x = np.zeros((hsvs.shape[0] * hsvs.shape[1]), dtype=bool)
@@ -133,8 +132,6 @@ async def check_emotion_in_file(*, emotion: str = Header(None),
     if os.path.exists(image_folder + file.filename):
         os.remove(image_folder + file.filename)
 
-    df = pd.read_csv("color_emotion.csv", delimiter="\t")
-
     emotion_dict_count = dict()
     x = np.zeros((hsvs.shape[0] * hsvs.shape[1]), dtype=bool)
 
@@ -172,8 +169,6 @@ async def recommend_colors(emotion: str = None):
 
     if emotion not in emotion_list:
         return build_error_response(status_code=400, content="Emotion is not in emotion list.")
-
-    df = pd.read_csv("color_emotion.csv", delimiter="\t")
 
     color_list = []
     for index, row in df.iterrows():
