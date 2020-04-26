@@ -5,6 +5,7 @@ from image_analysis.analysis import get_hsv_matriz_formatted
 from server.models.image_models import ImageAnalysisResponse, Color, Emotion, ColorRecommendation
 import pandas as pd
 import numpy as np
+import os
 
 from datetime import datetime
 
@@ -38,10 +39,18 @@ async def analyze_image(file: UploadFile = File(...)):
 
     start = datetime.now()
 
-    with open(file.filename, "wb") as out_file:
+    image_folder = "image/"
+
+    if not os.path.exists(image_folder):
+        os.mkdir(image_folder)
+
+    with open(image_folder + file.filename, "wb") as out_file:
         out_file.write(await file.read())
 
-    hsvs = get_hsv_matriz_formatted(file.filename)
+    hsvs = get_hsv_matriz_formatted(image_folder + file.filename)
+
+    if os.path.exists(image_folder + file.filename):
+        os.remove(image_folder + file.filename)
 
     df = pd.read_csv("color_emotion.csv", delimiter="\t")
 
@@ -111,10 +120,18 @@ async def check_emotion_in_file(*, emotion: str = Header(None),
     if emotion not in emotion_list:
         return build_error_response(status_code=400, content="Emotion is not in emotion list.")
 
-    with open(file.filename, "wb") as out_file:
+    image_folder = "image/"
+
+    if not os.path.exists(image_folder):
+        os.mkdir(image_folder)
+
+    with open(image_folder + file.filename, "wb") as out_file:
         out_file.write(await file.read())
 
-    hsvs = get_hsv_matriz_formatted(file.filename)
+    hsvs = get_hsv_matriz_formatted(image_folder + file.filename)
+
+    if os.path.exists(image_folder + file.filename):
+        os.remove(image_folder + file.filename)
 
     df = pd.read_csv("color_emotion.csv", delimiter="\t")
 
