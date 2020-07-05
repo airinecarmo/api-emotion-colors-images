@@ -38,8 +38,6 @@ def get_color_count(hsvs, nparray_df_s, nparray_df_e):
     status_code=200)
 async def analyze_image(file: UploadFile = File(...)):
 
-    start = datetime.now()
-
     image_folder = "image/"
 
     if not os.path.exists(image_folder):
@@ -65,20 +63,19 @@ async def analyze_image(file: UploadFile = File(...)):
 
         if row["emotion"] in emotion_dict_count:
             emotion_dict_count[row["emotion"]]["count"] += count
-            emotion_dict_count[row["emotion"]]["color"].append({
-                                                                    'color': row['color'],
-                                                                    'count': count,
-                                                                    'hsv_s': str([row["h_s"], row["s_s"], row["v_s"]]),
-                                                                    'hsv_e': str([row["h_e"], row["s_e"], row["v_e"]])
-                                                                })
         else:
             emotion_dict_count[row["emotion"]] = {"count": count}
-            emotion_dict_count[row["emotion"]]["color"] = [{
-                                                                "color": row['color'],
-                                                                "count": count,
+
+        splitted_states = str(row["states"]).split()
+        states = None if splitted_states[0] == 'nan' else splitted_states
+
+        emotion_dict_count[row["emotion"]].setdefault("color",[]).append({
+                                                                'color': row['color'],
+                                                                'count': count,
                                                                 'hsv_s': str([row["h_s"], row["s_s"], row["v_s"]]),
-                                                                'hsv_e': str([row["h_e"], row["s_e"], row["v_e"]])
-                                                            }]
+                                                                'hsv_e': str([row["h_e"], row["s_e"], row["v_e"]]),
+                                                                'states': states
+                                                            })
 
     zero = (hsvs.shape[0] * hsvs.shape[1]) - np.count_nonzero(x)
 
@@ -94,7 +91,7 @@ async def analyze_image(file: UploadFile = File(...)):
                     p_color_in_emotion = (color["count"] * 100) / emotion["count"]
 
                     if float("%.2f" % p_color_in_emotion) > 0.00:
-                        color_obj = Color(color=color['color'], hsv_s=color['hsv_s'], hsv_e=color['hsv_e'], percent="%.2f" % p_color_in_emotion)
+                        color_obj = Color(color=color['color'], hsv_s=color['hsv_s'], hsv_e=color['hsv_e'], percent="%.2f" % p_color_in_emotion, states=color['states'])
                         color_list.append(color_obj)
 
             percent = (emotion["count"] * 100) / ((hsvs.shape[0] * hsvs.shape[1]) - zero)
